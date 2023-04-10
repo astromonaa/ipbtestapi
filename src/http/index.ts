@@ -1,9 +1,9 @@
 import axios, { AxiosError } from "axios";
 
 const $api = axios.create({
-  baseURL: "http://84.201.188.117:5003/api/v3/ibonus/generalinfo/",
+  baseURL: import.meta.env.VITE_BONUSES_API,
   headers: {
-    AccessKey: "891cf53c-01fc-4d74-a14c-592668b7a03c",
+    AccessKey: import.meta.env.VITE_AccessKey,
   },
 });
 
@@ -28,19 +28,19 @@ $api.interceptors.request.use(
 export async function refresh() {
   try {
     const response = await axios.post(
-      "http://84.201.188.117:5021/api/v3/clients/accesstoken",
+      import.meta.env.VITE_TOKEN_API,
       {
-        "idClient": "2c44d8c2-c89a-472e-aab3-9a8a29142315",
+        "idClient": import.meta.env.VITE_idClient,
         "accessToken": "",
         "paramName": "device",
-        "paramValue": "7db72635-fd0a-46b9-813b-1627e3aa02ea",
+        "paramValue": import.meta.env.VITE_DeviceId,
         "latitude": 0,
         "longitude": 0,
         "sourceQuery": 0
       },
       {
         headers: {
-          AccessKey: "891cf53c-01fc-4d74-a14c-592668b7a03c",
+          AccessKey: import.meta.env.VITE_AccessKey,
         },
       }
     );
