@@ -1,0 +1,51 @@
+@keyframes notification {
+  from {
+    right: -150%;
+  }
+  50% {
+    right: 20px;
+  }
+  70% {
+    opacity: 1;
+    right: 20px;
+  }
+  to {
+    right: 20px;
+    opacity: 0;
+  }
+}
+
+.notification {
+  padding: 20px;
+  background: #ffffff;
+  box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  position: absolute;
+  // right: 20px;
+  right: -150%;
+  top: 76px;
+  width: 335px;
+  animation: notification 1.8s ease forwards;
+  &__desc {
+    grid-column: 1/2;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    line-height: 24px;
+    color: #979797;
+  }
+}
+.bonus-count {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+}
+.arrow-right {
+  grid-column: 2/2;
+  grid-row: 2/3;
+  margin-top: -12px;
+}

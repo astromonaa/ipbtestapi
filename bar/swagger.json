@@ -1,0 +1,275 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "iProBonus API  Тестовое задание",
+    "description": "API для sCRM - CRM системы программы лояльности",
+    "termsOfService": "https://progressterra.com",
+    "contact": {
+      "name": "ProgressTerra",
+      "url": "https://progressterra.com",
+      "email": "info@progressterra.com"
+    },
+    "version": "v3"
+  },
+  "paths": {
+    "/api/v3/clients/accesstoken": {
+      "post": {
+        "tags": [
+          "ClientsV3"
+        ],
+        "summary": "Создает и возвращает токен доступа клиента",
+        "description": "Токен доступа клиента необходимо использовать для получения любой информации о клиенте и бонусах клиента во внешнем периоде \\\r\nAccessToken живет TimeLiveAccessTokenClient (в секундах, указывается в appsettings)\r\nПри этом добавляется информация о работе с приложением с указанием гео меткки нахождения пользователя",
+        "parameters": [
+          {
+            "name": "AccessKey",
+            "in": "header",
+            "description": "Ключ доступа к API",
+            "schema": {
+              "type": "string",
+              "description": "Ключ доступа к API",
+              "nullable": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Параметры по которым ищется клиент и гео данные клиента",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientParamJSONWhithGeo"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientParamJSONWhithGeo"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientParamJSONWhithGeo"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientParamJSONWhithGeo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "AccessToken клиента \\\r\n            В случае ошибки получения данных возвращается блок \"result\" \\\r\n            в котором \"status\": не равен 0. В  message указана ошибка, idLog содержит идентификатор лога на сервере",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultAuthV3"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+      "/api/v3/ibonus/generalinfo/{AccessToken}": {
+      "get": {
+        "tags": [
+          "iBonusControllerV3"
+        ],
+        "summary": "Общая информацию о бонусах клиента",
+        "description": "Возвращает общую информацию о бонусах клиента: \\\r\nОбщее количетсво бонусов\r\nДату ближайшего сгорания бонусов и количество бонусов, которое сгорит в ближайшее время. \\\r\n В случае ошибки получения данных возвращается блок \"resultOperation\"\r\n в котором \"status\": не равен 0. В  message указана ошибка, idLog содержит идентификатор лога на сервере",
+        "parameters": [
+          {
+            "name": "AccessKey",
+            "in": "header",
+            "description": "Ключ доступа к API",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "AccessToken",
+            "in": "path",
+            "description": "Токен доступа клиента",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Возвращает доступное количество бонусов и информацию о ближайшей дате сгорания бонусов. \\\r\n            В случае ошибки получения данных возвращается блок \"resultOperation\" \\\r\n            в котором \"status\": не равен 0. В  message указана ошибка, idLog содержит идентификатор лога на сервере",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InfoByAvailableBonuses"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StatusResult": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "ResultOperation": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/StatusResult"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageDev": {
+            "type": "string",
+            "nullable": true
+          },
+          "codeResult": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration": {
+            "type": "number",
+            "format": "double"
+          },
+          "idLog": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+
+      "SourceQuery": {
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "ClientParamJSONWhithGeo": {
+        "type": "object",
+        "properties": {
+          "idClient": {
+            "default": "{ClientID}",
+            "type": "string",
+            "nullable": true
+          },
+          "accessToken": {
+            "default": "",
+            "type": "",
+            "nullable": true
+          },
+          "paramName": {
+            "default": "device",
+            "type": "string",
+            "nullable": true
+          },
+          "paramValue": {
+            "default": "{DeviceID}",
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "float"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "float"
+          },
+          "sourceQuery": {
+            "$ref": "#/components/schemas/SourceQuery"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResultAuthV3": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/ResultOperation"
+          },
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+
+
+      ,
+      "DataInfoByAvailableBonuses": {
+        "type": "object",
+        "properties": {
+          "typeBonusName": {
+            "type": "string",
+            "nullable": true
+          },
+          "currentQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "forBurningQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "dateBurning": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InfoByAvailableBonuses": {
+        "type": "object",
+        "properties": {
+          "resultOperation": {
+            "$ref": "#/components/schemas/ResultOperation"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DataInfoByAvailableBonuses"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListInfoByAvailableBonuses": {
+        "type": "object",
+        "properties": {
+          "resultOperation": {
+            "$ref": "#/components/schemas/ResultOperation"
+          },
+          "dataList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataInfoByAvailableBonuses"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+
+
+    }
+  }
+}

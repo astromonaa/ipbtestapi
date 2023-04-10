@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+}
+.container {
+  max-width: 375px;
+  width: 375px;
+  margin: 0 auto;
+  padding: 32px 0;
+  position: relative;
+  overflow: hidden;
+}
+.logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 76px;
+  padding: 0 25px;
+}
+.red-block {
+  background: linear-gradient(180deg, #D2333E 0%, #F54B55 100%);
+  height: 148px;
+}
